@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navigation Menu</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      :root {
+        --bg: #0b0f19;
+        --panel: rgba(30, 41, 59, 0.55);
+        --panel-solid: #1e293b;
+        --text: #f8fafc;
+        --text-soft: #94a3b8;
+        --accent: #38bdf8;
+        --profit: #34d399;
+        --profit-bg: rgba(52, 211, 153, 0.12);
+        --loss: #f87171;
+        --loss-bg: rgba(248, 113, 113, 0.12);
+        --line: rgba(51, 65, 85, 0.8);
+      }
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* --- Navbar Styling --- */
+      .navbar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 24px 40px;
+        background-color: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(51, 65, 85, 0.8);
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .nav-link {
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition:
+          color 0.3s ease,
+          transform 0.2s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px 30px;
+      }
+      .nav-link:hover {
+        color: #38bdf8;
+        transform: translateY(-2px);
+      }
+      .nav-link.active {
+        color: var(--accent);
+      }
+      .nav-link.logout {
+        color: var(--loss);
+        margin-left: auto;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 44px 24px 90px;
+      }
+
+      /* Month switcher */
+      .month-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+      .month-bar button {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: var(--panel-solid);
+        color: var(--text);
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .month-bar button:hover {
+        background: var(--accent);
+        color: #0b0f19;
+        border-color: var(--accent);
+      }
+      .month-title {
+        font-size: 24px;
+        font-weight: 700;
+        min-width: 220px;
+        text-align: center;
+        letter-spacing: 0.3px;
+      }
+
+      /* Circular progress ring */
+      .ring-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 26px;
+      }
+      .ring-box {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+      .ring-box svg {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+      }
+      .ring-track {
+        fill: none;
+        stroke: var(--line);
+        stroke-width: 14;
+      }
+      .ring-profit {
+        fill: none;
+        stroke: var(--profit);
+        stroke-width: 14;
+        transition: stroke-dasharray 0.4s ease;
+      }
+      .ring-loss {
+        fill: none;
+        stroke: var(--loss);
+        stroke-width: 14;
+        transition: stroke-dasharray 0.4s ease;
+      }
+      .ring-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .ring-net {
+        font-size: 20px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .ring-net.profit {
+        color: var(--profit);
+      }
+      .ring-net.loss {
+        color: var(--loss);
+      }
+      .ring-net.zero {
+        color: var(--text-soft);
+      }
+      .ring-sub {
+        font-size: 10.5px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-soft);
+        margin-top: 6px;
+      }
+      .ring-legend {
+        display: flex;
+        justify-content: center;
+        gap: 22px;
+        margin-top: 16px;
+        font-size: 12.5px;
+        color: var(--text-soft);
+      }
+      .ring-legend span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot.profit {
+        background: var(--profit);
+      }
+      .dot.loss {
+        background: var(--loss);
+      }
+      .dot.track {
+        background: var(--line);
+      }
+
+      /* Stat cards: avg profit/loss, biggest win/loss */
+      .stat-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 640px;
+        margin: 0 auto 34px;
+      }
+      .stat-card {
+        background: var(--panel-solid);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 10px;
+        text-align: center;
+      }
+      .stat-card .stat-label {
+        font-size: 10px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--text-soft);
+        margin-bottom: 6px;
+      }
+      .stat-card .stat-val {
+        font-size: 16px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat-card .stat-val.profit {
+        color: var(--profit);
+      }
+      .stat-card .stat-val.loss {
+        color: var(--loss);
+      }
+      .stat-card .stat-val.zero {
+        color: var(--text-soft);
+      }
+
+      /* Grid of days */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+      .day {
+        aspect-ratio: 1/1;
+        background: var(--panel-solid);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s,
+          border-color 0.12s;
+        position: relative;
+        padding: 1px;
+      }
+      .day:hover {
+        transform: translateY(-1px);
+        border-color: var(--accent);
+      }
+      .day .num {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--text-soft);
+      }
+      .day .amt {
+        font-size: 7.5px;
+        font-weight: 600;
+        margin-top: 1px;
+      }
+      .day.profit {
+        background: var(--profit-bg);
+        border-color: var(--profit);
+      }
+      .day.profit .num {
+        color: var(--profit);
+      }
+      .day.profit .amt {
+        color: var(--profit);
+      }
+      .day.loss {
+        background: var(--loss-bg);
+        border-color: var(--loss);
+      }
+      .day.loss .num {
+        color: var(--loss);
+      }
+      .day.loss .amt {
+        color: var(--loss);
+      }
+      .day.empty {
+        visibility: hidden;
+        cursor: default;
+      }
+      .day.today {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+
+      .hint {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-top: 22px;
+      }
+
+      /* Modal */
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 15, 25, 0.6);
+        z-index: 50;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: var(--panel-solid);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 28px;
+        width: 300px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .modal h3 {
+        margin: 0 0 4px;
+        font-size: 19px;
+      }
+      .modal p.sub {
+        margin: 0 0 18px;
+        color: var(--text-soft);
+        font-size: 13px;
+      }
+      .modal label {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+      .modal label .opt {
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text-soft);
+      }
+      .amount-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0 18px;
+      }
+      .amount-row select {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 9px 6px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14px;
+      }
+      .amount-row input {
+        flex: 1;
+        font-size: 16px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 9px 10px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .amount-row input:focus,
+      .amount-row select:focus,
+      .modal textarea:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .modal textarea {
+        width: 100%;
+        font-size: 13.5px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 9px 10px;
+        background: var(--bg);
+        color: var(--text);
+        resize: none;
+        margin-top: 6px;
+        margin-bottom: 18px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .modal-actions button {
+        flex: 1;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .btn-save {
+        background: var(--accent);
+        color: #0b0f19;
+        border-color: var(--accent);
+      }
+      .btn-save:hover {
+        background: #5ecbfa;
+      }
+      .btn-clear {
+        background: none;
+        color: var(--loss);
+      }
+      .btn-clear:hover {
+        background: var(--loss-bg);
+      }
+      .btn-cancel {
+        background: none;
+        color: var(--text-soft);
+      }
+      .btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      #editMode,
+      #viewMode {
+        display: none;
+      }
+      .view-amt {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      .view-amt.profit {
+        color: var(--profit);
+      }
+      .view-amt.loss {
+        color: var(--loss);
+      }
+      .view-note {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-soft);
+        margin: 0 0 22px;
+        min-height: 20px;
+      }
+      .view-note.empty {
+        font-style: italic;
+        color: #54607a;
+      }
+
+      /* --- Login screen --- */
+      #authScreen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      #authScreen.hidden {
+        display: none;
+      }
+      #appRoot.hidden {
+        display: none;
+      }
+      .login-box {
+        background: var(--panel-solid);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 36px 30px;
+        width: 320px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .login-box h2 {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      .login-box p.sub {
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+      .login-box input {
+        width: 100%;
+        font-size: 15px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 10px 12px;
+        background: var(--bg);
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+      .login-box input:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .login-box button {
+        width: 100%;
+        padding: 11px;
+        border-radius: 6px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #0b0f19;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 6px;
+      }
+      .login-box button:hover {
+        background: #5ecbfa;
+      }
+      .login-box button:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .login-error {
+        color: var(--loss);
+        font-size: 12.5px;
+        min-height: 16px;
+        margin-top: 10px;
+      }
+      .login-loading {
+        text-align: center;
+        color: var(--text-soft);
+        font-size: 13px;
+      }
+
+      @media (max-width: 600px) {
+        .stat-row {
+          grid-template-columns: repeat(2, 1fr);
+          max-width: 280px;
+        }
+        .navbar {
+          padding: 16px 20px;
+        }
+        .grid {
+          grid-template-columns: repeat(7, 1fr);
+          max-width: 280px;
+        }
+        .day .num {
+          font-size: 10px;
+        }
+        .day .amt {
+          font-size: 6.5px;
+        }
+        .ring-box {
+          width: 170px;
+          height: 170px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======================= LOGIN SCREEN ======================= -->
+    <div id="authScreen">
+      <div class="login-box">
+        <h2>Trading Journal</h2>
+        <p class="sub">Sign in to view your data</p>
+        <input
+          type="email"
+          id="loginEmail"
+          placeholder="Email"
+          autocomplete="username"
+        />
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <button id="loginBtn">Sign In</button>
+        <div class="login-error" id="loginError"></div>
+      </div>
+    </div>
+
+    <!-- ======================= APP (hidden until logged in) ======================= -->
+    <div id="appRoot" class="hidden">
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <a href="Home.html" class="nav-link active">Home</a>
+        <a href="contact.html" class="nav-link">Contact Me</a>
+        <button class="nav-link logout" id="logoutBtn">Log out</button>
+      </nav>
+
+      <main>
+        <div class="month-bar">
+          <button id="prevMonth" aria-label="Previous month">‹</button>
+          <div class="month-title" id="monthTitle">August 2026</div>
+          <button id="nextMonth" aria-label="Next month">›</button>
+        </div>
+
+        <div class="ring-wrap">
+          <div>
+            <div class="ring-box">
+              <svg viewBox="0 0 200 200">
+                <circle class="ring-track" cx="100" cy="100" r="86"></circle>
+                <circle
+                  class="ring-profit"
+                  id="ringProfit"
+                  cx="100"
+                  cy="100"
+                  r="86"
+                ></circle>
+                <circle
+                  class="ring-loss"
+                  id="ringLoss"
+                  cx="100"
+                  cy="100"
+                  r="86"
+                ></circle>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-net" id="netTotal">₹0</div>
+                <div class="ring-sub" id="daysLogged">0 / 31 days logged</div>
+              </div>
+            </div>
+            <div class="ring-legend">
+              <span
+                ><i class="dot profit"></i
+                ><span id="profitDays">0</span> profit</span
+              >
+              <span
+                ><i class="dot loss"></i><span id="lossDays">0</span> loss</span
+              >
+              <span
+                ><i class="dot track"></i
+                ><span id="openDays">31</span> open</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-label">Avg Profit</div>
+            <div class="stat-val profit" id="avgProfit">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Loss</div>
+            <div class="stat-val loss" id="avgLoss">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Biggest Win</div>
+            <div class="stat-val profit" id="biggestWin">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Biggest Loss</div>
+            <div class="stat-val loss" id="biggestLoss">—</div>
+          </div>
+        </div>
+
+        <div class="grid" id="dayGrid"></div>
+        <p class="hint" id="syncHint"></p>
+      </main>
+
+      <!-- MODAL -->
+      <div class="overlay" id="overlay">
+        <div class="modal">
+          <!-- VIEW MODE: shown for a day that already has an entry -->
+          <div id="viewMode">
+            <h3 id="viewDate">August 5</h3>
+            <div class="view-amt" id="viewAmt">+₹500</div>
+            <p class="view-note" id="viewNote">No description added.</p>
+            <div class="modal-actions">
+              <button class="btn-cancel" id="closeViewBtn">Close</button>
+              <button class="btn-save" id="editBtn">Edit</button>
+            </div>
+          </div>
+
+          <!-- EDIT MODE: shown for a new entry, or after tapping Edit -->
+          <div id="editMode">
+            <h3 id="modalDate">August 5</h3>
+            <p class="sub">Log your result for this day</p>
+            <label>Result</label>
+            <div class="amount-row">
+              <select id="sign">
+                <option value="1">Profit +</option>
+                <option value="-1">Loss −</option>
+              </select>
+              <input
+                type="number"
+                id="amountInput"
+                placeholder="0"
+                min="0"
+                step="any"
+              />
+            </div>
+            <label
+              >Description
+              <span class="opt">(stock, notes — optional)</span></label
+            >
+            <textarea
+              id="noteInput"
+              rows="2"
+              placeholder="e.g. RELIANCE — booked profit at target"
+            ></textarea>
+            <div class="modal-actions">
+              <button class="btn-cancel" id="cancelBtn">Cancel</button>
+              <button class="btn-clear" id="clearBtn">Clear</button>
+              <button class="btn-save" id="saveBtn">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /appRoot -->
+
+    <!-- ======================= FIREBASE ======================= -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        signOut,
+        setPersistence,
+        browserLocalPersistence,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+      // ======================================================================
+      // PASTE YOUR FIREBASE CONFIG HERE (from Firebase Console > Project settings)
+      // ======================================================================
+      const firebaseConfig = {
+        apiKey: "AIzaSyA9S2wvvZV81q3MfABThbgUorilwG4DQoc",
+        authDomain: "trading-yg.firebaseapp.com",
+        projectId: "trading-yg",
+        storageBucket: "trading-yg.firebasestorage.app",
+        messagingSenderId: "960593255236",
+        appId: "1:960593255236:web:6138355b7c4e1cc4bed511",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      setPersistence(auth, browserLocalPersistence);
+
+      const authScreen = document.getElementById("authScreen");
+      const appRoot = document.getElementById("appRoot");
+      const loginEmail = document.getElementById("loginEmail");
+      const loginPassword = document.getElementById("loginPassword");
+      const loginBtn = document.getElementById("loginBtn");
+      const loginError = document.getElementById("loginError");
+
+      loginBtn.addEventListener("click", doLogin);
+      loginPassword.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doLogin();
+      });
+
+      async function doLogin() {
+        loginError.textContent = "";
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Signing in...";
+        try {
+          await signInWithEmailAndPassword(
+            auth,
+            loginEmail.value.trim(),
+            loginPassword.value,
+          );
+        } catch (e) {
+          loginError.textContent = "Incorrect email or password.";
+        }
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Sign In";
+      }
+
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", () => signOut(auth));
+
+      let currentUid = null;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUid = user.uid;
+          authScreen.classList.add("hidden");
+          appRoot.classList.remove("hidden");
+          window.__journalReady && window.__journalReady();
+        } else {
+          currentUid = null;
+          authScreen.classList.remove("hidden");
+          appRoot.classList.add("hidden");
+        }
+      });
+
+      // Expose Firestore helpers for the app script below
+      window.__firestore = {
+        async loadMonth(y, m) {
+          if (!currentUid) return {};
+          const ref = doc(db, "users", currentUid, "entries", `${y}-${m}`);
+          const snap = await getDoc(ref);
+          return snap.exists() ? snap.data() : {};
+        },
+        async saveMonth(y, m, data) {
+          if (!currentUid) return;
+          const ref = doc(db, "users", currentUid, "entries", `${y}-${m}`);
+          await setDoc(ref, data);
+        },
+      };
+    </script>
+
+    <script>
+      const MONTHS = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      let today = new Date();
+      let viewYear = today.getFullYear();
+      let viewMonth = today.getMonth();
+      let currentDay = null;
+      let entriesCache = {};
+
+      const grid = document.getElementById("dayGrid");
+      const monthTitle = document.getElementById("monthTitle");
+      const overlay = document.getElementById("overlay");
+      const modalDate = document.getElementById("modalDate");
+      const amountInput = document.getElementById("amountInput");
+      const signSelect = document.getElementById("sign");
+      const noteInput = document.getElementById("noteInput");
+      const viewModeEl = document.getElementById("viewMode");
+      const editModeEl = document.getElementById("editMode");
+      const viewDate = document.getElementById("viewDate");
+      const viewAmt = document.getElementById("viewAmt");
+      const viewNote = document.getElementById("viewNote");
+      const syncHint = document.getElementById("syncHint");
+
+      function fmt(n) {
+        const abs = Math.abs(n);
+        const s =
+          "₹" + abs.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+        return n < 0 ? "−" + s : "+" + s;
+      }
+
+      function normalize(raw) {
+        const out = {};
+        for (const [day, v] of Object.entries(raw || {})) {
+          if (typeof v === "number") out[day] = { amount: v, note: "" };
+          else if (v && typeof v === "object" && typeof v.amount === "number")
+            out[day] = { amount: v.amount, note: v.note || "" };
+        }
+        return out;
+      }
+
+      async function loadMonth() {
+        grid.innerHTML = "";
+        monthTitle.textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+        syncHint.textContent = "Loading...";
+        try {
+          const raw = await window.__firestore.loadMonth(viewYear, viewMonth);
+          entriesCache = normalize(raw);
+          syncHint.textContent = "";
+        } catch (e) {
+          entriesCache = {};
+          syncHint.textContent = "Could not load data — check your connection.";
+          console.error(e);
+        }
+        renderGrid();
+        renderSummary();
+      }
+
+      function daysInMonth(y, m) {
+        return new Date(y, m + 1, 0).getDate();
+      }
+
+      function renderGrid() {
+        grid.innerHTML = "";
+        const total = daysInMonth(viewYear, viewMonth);
+        const isCurrentRealMonth =
+          viewYear === today.getFullYear() && viewMonth === today.getMonth();
+        for (let d = 1; d <= 31; d++) {
+          const cell = document.createElement("div");
+          if (d > total) {
+            cell.className = "day empty";
+            grid.appendChild(cell);
+            continue;
+          }
+          cell.className = "day";
+          if (isCurrentRealMonth && d === today.getDate())
+            cell.classList.add("today");
+          const entry = entriesCache[d];
+          if (entry) {
+            cell.classList.add(entry.amount >= 0 ? "profit" : "loss");
+          }
+          cell.innerHTML =
+            `<div class="num">${d}</div>` +
+            (entry ? `<div class="amt">${fmt(entry.amount)}</div>` : "");
+          cell.addEventListener("click", () => openModal(d));
+          grid.appendChild(cell);
+        }
+      }
+
+      const RING_R = 86;
+      const RING_C = 2 * Math.PI * RING_R;
+
+      function renderSummary() {
+        const totalDays = daysInMonth(viewYear, viewMonth);
+        const vals = Object.values(entriesCache).map((e) => e.amount);
+        const net = vals.reduce((a, b) => a + b, 0);
+        const profitDays = vals.filter((v) => v > 0).length;
+        const lossDays = vals.filter((v) => v < 0).length;
+        const openDays = totalDays - profitDays - lossDays;
+
+        document.getElementById("profitDays").textContent = profitDays;
+        document.getElementById("lossDays").textContent = lossDays;
+        document.getElementById("openDays").textContent = openDays;
+        document.getElementById("daysLogged").textContent =
+          `${profitDays + lossDays} / ${totalDays} days logged`;
+
+        const netEl = document.getElementById("netTotal");
+        netEl.textContent = fmt(net).replace("+", "+ ").replace("−", "− ");
+        netEl.className =
+          "ring-net " + (net > 0 ? "profit" : net < 0 ? "loss" : "zero");
+
+        const profitLen = RING_C * (profitDays / totalDays);
+        const lossLen = RING_C * (lossDays / totalDays);
+
+        const profitCircle = document.getElementById("ringProfit");
+        const lossCircle = document.getElementById("ringLoss");
+
+        profitCircle.style.strokeDasharray = `${profitLen} ${RING_C - profitLen}`;
+        profitCircle.style.strokeDashoffset = 0;
+
+        lossCircle.style.strokeDasharray = `${lossLen} ${RING_C - lossLen}`;
+        lossCircle.style.strokeDashoffset = -profitLen;
+
+        const profitVals = vals.filter((v) => v > 0);
+        const lossVals = vals.filter((v) => v < 0);
+        const avgProfit = profitVals.length
+          ? profitVals.reduce((a, b) => a + b, 0) / profitVals.length
+          : null;
+        const avgLoss = lossVals.length
+          ? lossVals.reduce((a, b) => a + b, 0) / lossVals.length
+          : null;
+        const biggestWin = profitVals.length ? Math.max(...profitVals) : null;
+        const biggestLoss = lossVals.length ? Math.min(...lossVals) : null;
+
+        setStat("avgProfit", avgProfit, "profit");
+        setStat("avgLoss", avgLoss, "loss");
+        setStat("biggestWin", biggestWin, "profit");
+        setStat("biggestLoss", biggestLoss, "loss");
+      }
+
+      function setStat(id, value, kind) {
+        const el = document.getElementById(id);
+        if (value === null) {
+          el.textContent = "—";
+          el.className = "stat-val zero";
+        } else {
+          el.textContent = fmt(value);
+          el.className = "stat-val " + kind;
+        }
+      }
+
+      function openModal(day) {
+        currentDay = day;
+        const existing = entriesCache[day];
+        if (existing) {
+          showView(day, existing);
+        } else {
+          showEdit(day, null);
+        }
+        overlay.classList.add("active");
+      }
+
+      function showView(day, entry) {
+        viewModeEl.style.display = "block";
+        editModeEl.style.display = "none";
+        viewDate.textContent = `${MONTHS[viewMonth]} ${day}`;
+        viewAmt.textContent = fmt(entry.amount);
+        viewAmt.className =
+          "view-amt " + (entry.amount >= 0 ? "profit" : "loss");
+        if (entry.note && entry.note.trim()) {
+          viewNote.textContent = entry.note;
+          viewNote.classList.remove("empty");
+        } else {
+          viewNote.textContent = "No description added.";
+          viewNote.classList.add("empty");
+        }
+      }
+
+      function showEdit(day, entry) {
+        viewModeEl.style.display = "none";
+        editModeEl.style.display = "block";
+        modalDate.textContent = `${MONTHS[viewMonth]} ${day}`;
+        if (entry) {
+          signSelect.value = entry.amount < 0 ? "-1" : "1";
+          amountInput.value = Math.abs(entry.amount);
+          noteInput.value = entry.note || "";
+        } else {
+          signSelect.value = "1";
+          amountInput.value = "";
+          noteInput.value = "";
+        }
+        setTimeout(() => amountInput.focus(), 50);
+      }
+
+      function closeModal() {
+        overlay.classList.remove("active");
+        currentDay = null;
+      }
+
+      document
+        .getElementById("closeViewBtn")
+        .addEventListener("click", closeModal);
+      document.getElementById("editBtn").addEventListener("click", () => {
+        showEdit(currentDay, entriesCache[currentDay] || null);
+      });
+      document
+        .getElementById("cancelBtn")
+        .addEventListener("click", closeModal);
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+      });
+
+      document.getElementById("saveBtn").addEventListener("click", async () => {
+        const raw = parseFloat(amountInput.value);
+        if (isNaN(raw) || raw < 0) {
+          amountInput.focus();
+          return;
+        }
+        const signed = raw * parseFloat(signSelect.value);
+        entriesCache[currentDay] = {
+          amount: signed,
+          note: noteInput.value.trim(),
+        };
+        await persist();
+        renderGrid();
+        renderSummary();
+        closeModal();
+      });
+
+      document
+        .getElementById("clearBtn")
+        .addEventListener("click", async () => {
+          delete entriesCache[currentDay];
+          await persist();
+          renderGrid();
+          renderSummary();
+          closeModal();
+        });
+
+      async function persist() {
+        syncHint.textContent = "Saving...";
+        try {
+          await window.__firestore.saveMonth(viewYear, viewMonth, entriesCache);
+          syncHint.textContent = "";
+        } catch (e) {
+          syncHint.textContent = "Save failed — check your connection.";
+          console.error("Save failed", e);
+        }
+      }
+
+      document.getElementById("prevMonth").addEventListener("click", () => {
+        viewMonth--;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear--;
+        }
+        loadMonth();
+      });
+      document.getElementById("nextMonth").addEventListener("click", () => {
+        viewMonth++;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear++;
+        }
+        loadMonth();
+      });
+
+      // Called by the Firebase script once the user is confirmed logged in
+      window.__journalReady = function () {
+        loadMonth();
+      };
+      //OmtR2e4aL2OHobkihoP8fspcPgD3
+    </script>
+  </body>
+</html>

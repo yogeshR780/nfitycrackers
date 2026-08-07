@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trader Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        color: #f8fafc;
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+
+        background-image: url(traders.jpg);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .dashboard-card {
+        background: rgba(30, 41, 59, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+        border: 1px solid #334155;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #38bdf8;
+      }
+
+      .action-btn {
+        background-color: #10b981;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          transform 0.1s;
+        width: 100%;
+      }
+
+      .action-btn:hover {
+        background-color: #059669;
+      }
+
+      .action-btn:active {
+        transform: scale(0.98);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-card">
+      <h1>
+        Welcome <br />
+        Trader
+      </h1>
+
+      <!-- Button with a click event to redirect -->
+      <button class="action-btn" id="redirectBtn">Open Workspace</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("redirectBtn")
+        .addEventListener("click", function () {
+          // Change 'next-page.html' to the URL or file path of your new page
+          window.location.href = "Home.html";
+        });
+    </script>
+  </body>
+</html>
