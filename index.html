@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trader Dashboard</title>
+    <title>NiftyEdge — Welcome</title>
     <style>
       * {
         margin: 0;
@@ -11,81 +11,377 @@
         box-sizing: border-box;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
-
+      :root {
+        --bg: #0b0f19;
+        --text: #f8fafc;
+        --text-soft: #94a3b8;
+        --accent: #38bdf8;
+        --accent2: #a855f7;
+        --line: rgba(51, 65, 85, 0.8);
+      }
       body {
-        color: #f8fafc;
-        display: flex;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-
-        background-image: url(background1.png);
+        background-color: var(--bg);
+        background-image: url("loginbg.png");
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
       }
 
-      .dashboard-card {
-        background: rgba(30, 41, 59, 0.45);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        text-align: center;
-        max-width: 400px;
+      /* Navbar */
+      .navbar {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 24px 48px;
         width: 100%;
-        border: 1px solid #334155;
       }
-
-      h1 {
-        font-size: 24px;
-        margin-bottom: 10px;
-        color: #38bdf8;
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-self: start;
       }
-
-      .action-btn {
-        background-color: #10b981;
-        color: white;
-        border: none;
-        padding: 12px 24px;
+      .brand-text {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+      .brand-accent {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 6px;
+        justify-self: center;
+      }
+      .nav-link {
+        color: var(--text-soft);
+        text-decoration: none;
         font-size: 16px;
         font-weight: 600;
+        padding: 6px 22px;
+        transition: color 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+      }
+      .nav-link.active {
+        color: var(--accent);
+        border-bottom: 2px solid var(--accent);
+      }
+      .login-btn {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text);
+        text-decoration: none;
+        border: 1px solid var(--accent);
         border-radius: 8px;
+        padding: 10px 22px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+      .login-btn:hover {
+        background: rgba(56, 189, 248, 0.12);
+      }
+
+      /* Hero */
+      .hero {
+        max-width: 620px;
+        padding: 60px 48px 90px;
+      }
+      .eyebrow-line {
+        width: 90px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        border-radius: 3px;
+        margin: 18px 0 26px;
+      }
+      .hero h1 {
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1.05;
+      }
+      .hero h1 .line2 {
+        display: block;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero-sub {
+        color: var(--text-soft);
+        font-size: 17px;
+        line-height: 1.6;
+        margin-bottom: 34px;
+      }
+      .hero-sub span {
+        display: block;
+      }
+
+      .open-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        color: #fff;
+        border: none;
+        text-decoration: none;
+        padding: 16px 30px;
+        font-size: 17px;
+        font-weight: 700;
+        border-radius: 10px;
         cursor: pointer;
         transition:
-          background-color 0.2s,
-          transform 0.1s;
-        width: 100%;
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.25);
       }
-
-      .action-btn:hover {
-        background-color: #059669;
+      .open-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 34px rgba(168, 85, 247, 0.3);
       }
-
-      .action-btn:active {
+      .open-btn:active {
         transform: scale(0.98);
+      }
+      .open-btn svg {
+        transition: transform 0.15s ease;
+      }
+      .open-btn:hover svg {
+        transform: translateX(4px);
+      }
+
+      /* Feature row */
+      .feature-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+        margin-top: 56px;
+        max-width: 560px;
+      }
+      .feature {
+        text-align: center;
+      }
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        margin: 0 auto 12px;
+      }
+      .feature h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .feature p {
+        font-size: 12.5px;
+        color: var(--text-soft);
+        line-height: 1.4;
+      }
+
+      @media (max-width: 900px) {
+        .hero h1 {
+          font-size: 46px;
+        }
+        .feature-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .navbar {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 14px;
+          padding: 20px 24px;
+        }
+        .brand,
+        .nav-links,
+        .login-btn {
+          justify-self: center;
+        }
+        .hero {
+          padding: 40px 24px 70px;
+          max-width: 100%;
+        }
+        .hero h1 {
+          font-size: 38px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="dashboard-card">
-      <h1>
-        Welcome <br />
-        Rohan
-      </h1>
+    <nav class="navbar">
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true">
+          <polyline
+            points="4,30 14,18 22,26 36,6"
+            fill="none"
+            stroke="url(#brandGrad)"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></polyline>
+          <polyline
+            points="26,6 36,6 36,16"
+            fill="none"
+            stroke="url(#brandGrad)"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></polyline>
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40">
+              <stop offset="0" stop-color="#38bdf8"></stop>
+              <stop offset="1" stop-color="#a855f7"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-text"
+          >NIFTY<span class="brand-accent">EDGE</span></span
+        >
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="contact.html" class="nav-link">Contact Me</a>
+      </div>
+      <a href="home.html" class="login-btn">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+        </svg>
+        Login
+      </a>
+    </nav>
 
-      <!-- Button with a click event to redirect -->
-      <button class="action-btn" id="redirectBtn">Open Workspace</button>
-    </div>
+    <section class="hero">
+      <h1>
+        Welcome
+        <span class="line2">Rohan</span>
+      </h1>
+      <div class="eyebrow-line"></div>
+      <p class="hero-sub">
+        <span>Track. Analyze. Improve.</span>
+        <span>Your edge in the markets starts here.</span>
+      </p>
+
+      <a href="home.html" class="open-btn" id="redirectBtn">
+        Open Workspace
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12,5 19,12 12,19"></polyline>
+        </svg>
+      </a>
+
+      <div class="feature-row">
+        <div class="feature">
+          <div class="feature-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="3,17 9,11 13,15 21,5"></polyline>
+              <polyline points="14,5 21,5 21,12"></polyline>
+            </svg>
+          </div>
+          <h3>Track Trades</h3>
+          <p>Log every trade with ease</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 12A9 9 0 1 1 12 3v9z"></path>
+              <path d="M21 12a9 9 0 0 1-9 9"></path>
+            </svg>
+          </div>
+          <h3>Analyze Performance</h3>
+          <p>Understand your strengths</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M8 21h8"></path>
+              <path d="M12 17v4"></path>
+              <path d="M7 4h10v5a5 5 0 0 1-10 0V4z"></path>
+              <path d="M17 5h3a2 2 0 0 1-2 4h-1"></path>
+              <path d="M7 5H4a2 2 0 0 0 2 4h1"></path>
+            </svg>
+          </div>
+          <h3>Improve Consistently</h3>
+          <p>Learn and grow every day</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="9"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="19" y1="5" x2="15.5" y2="8.5"></line>
+              <polyline points="19,2 19,5 22,5"></polyline>
+            </svg>
+          </div>
+          <h3>Stay Disciplined</h3>
+          <p>Discipline today, freedom tomorrow</p>
+        </div>
+      </div>
+    </section>
 
     <script>
       document
         .getElementById("redirectBtn")
-        .addEventListener("click", function () {
-          // Change 'next-page.html' to the URL or file path of your new page
-          window.location.href = "Home.html";
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "home.html";
         });
     </script>
   </body>
