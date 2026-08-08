@@ -13,11 +13,12 @@
       }
       :root {
         --bg: #0b0f19;
-        --panel: rgba(30, 41, 59, 0.55);
+        --panel: rgba(30, 41, 59, 0.5);
         --panel-solid: #1e293b;
         --text: #f8fafc;
         --text-soft: #94a3b8;
         --accent: #38bdf8;
+        --accent2: #a855f7;
         --profit: #34d399;
         --profit-bg: rgba(52, 211, 153, 0.12);
         --loss: #f87171;
@@ -26,29 +27,54 @@
       }
       body {
         background-color: var(--bg);
+        background-image: url("background2.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         color: var(--text);
         min-height: 100vh;
       }
 
       /* --- Navbar Styling --- */
       .navbar {
-        display: flex;
-        justify-content: space-around;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        padding: 24px 40px;
-        background-color: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        padding: 20px 40px;
+        background-color: rgba(30, 41, 59, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border-bottom: 1px solid rgba(51, 65, 85, 0.8);
         width: 100%;
         position: sticky;
         top: 0;
         z-index: 20;
       }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-self: start;
+      }
+      .brand-text {
+        font-size: 19px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: 0.3px;
+      }
+      .brand-accent {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 6px;
+        justify-self: center;
+      }
       .nav-link {
         color: #94a3b8;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         letter-spacing: 0.5px;
         transition:
@@ -57,7 +83,7 @@
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px 30px;
+        padding: 6px 20px;
       }
       .nav-link:hover {
         color: #38bdf8;
@@ -65,25 +91,52 @@
       }
       .nav-link.active {
         color: var(--accent);
+        border-bottom: 2px solid var(--accent);
       }
       .nav-link.logout {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         color: var(--loss);
-        margin-left: auto;
+        border: 1px solid rgba(248, 113, 113, 0.4);
+        border-radius: 8px;
+        padding: 8px 18px;
+      }
+      .nav-link.logout:hover {
+        background: var(--loss-bg);
+        transform: none;
       }
 
       main {
-        max-width: 1000px;
+        max-width: 1280px;
         margin: 0 auto;
-        padding: 44px 24px 90px;
+        padding: 40px 24px 90px;
       }
 
-      /* Month switcher */
+      /* Glass card base */
+      .glass {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Top row: month switcher + days-logged widget */
+      .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 26px;
+      }
       .month-bar {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 18px;
-        margin-bottom: 30px;
+        gap: 16px;
       }
       .month-bar button {
         width: 34px;
@@ -95,6 +148,7 @@
         font-size: 16px;
         cursor: pointer;
         transition: all 0.15s;
+        flex-shrink: 0;
       }
       .month-bar button:hover {
         background: var(--accent);
@@ -102,23 +156,130 @@
         border-color: var(--accent);
       }
       .month-title {
-        font-size: 24px;
-        font-weight: 700;
-        min-width: 220px;
-        text-align: center;
+        font-size: 26px;
+        font-weight: 800;
         letter-spacing: 0.3px;
       }
-
-      /* Circular progress ring */
-      .ring-wrap {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 26px;
+      .month-sub {
+        font-size: 12.5px;
+        color: var(--text-soft);
+        margin-top: 2px;
       }
+
+      .logged-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 20px;
+      }
+      .icon-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .icon-badge.blue {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--accent);
+      }
+      .icon-badge.profit {
+        background: var(--profit-bg);
+        color: var(--profit);
+      }
+      .icon-badge.loss {
+        background: var(--loss-bg);
+        color: var(--loss);
+      }
+      .logged-text .l-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+      .logged-text .l-sub {
+        font-size: 11.5px;
+        color: var(--text-soft);
+        margin-top: 2px;
+      }
+      .mini-ring {
+        --p: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--accent) calc(var(--p) * 1%),
+          rgba(255, 255, 255, 0.08) 0
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .mini-ring::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border-radius: 50%;
+        background: #0e1424;
+      }
+      .mini-ring span {
+        position: relative;
+        font-size: 9.5px;
+        font-weight: 700;
+      }
+
+      /* Hero row: total P&L card + 3 metric cards */
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .total-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 24px;
+      }
+      .total-info {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .total-label {
+        font-size: 11.5px;
+        letter-spacing: 1px;
+        color: var(--text-soft);
+        text-transform: uppercase;
+      }
+      .total-amt {
+        font-size: 30px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+      .total-amt.profit {
+        color: var(--profit);
+      }
+      .total-amt.loss {
+        color: var(--loss);
+      }
+      .total-amt.zero {
+        color: var(--text-soft);
+      }
+      .total-sub {
+        font-size: 12.5px;
+        color: var(--text-soft);
+      }
+
       .ring-box {
         position: relative;
-        width: 200px;
-        height: 200px;
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
       }
       .ring-box svg {
         transform: rotate(-90deg);
@@ -128,18 +289,18 @@
       .ring-track {
         fill: none;
         stroke: var(--line);
-        stroke-width: 14;
+        stroke-width: 12;
       }
       .ring-profit {
         fill: none;
         stroke: var(--profit);
-        stroke-width: 14;
+        stroke-width: 12;
         transition: stroke-dasharray 0.4s ease;
       }
       .ring-loss {
         fill: none;
         stroke: var(--loss);
-        stroke-width: 14;
+        stroke-width: 12;
         transition: stroke-dasharray 0.4s ease;
       }
       .ring-center {
@@ -152,7 +313,7 @@
         text-align: center;
       }
       .ring-net {
-        font-size: 20px;
+        font-size: 13px;
         font-weight: 700;
         font-variant-numeric: tabular-nums;
       }
@@ -166,53 +327,74 @@
         color: var(--text-soft);
       }
       .ring-sub {
-        font-size: 10.5px;
-        letter-spacing: 1px;
+        font-size: 8px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
         color: var(--text-soft);
-        margin-top: 6px;
-      }
-      .ring-legend {
-        display: flex;
-        justify-content: center;
-        gap: 22px;
-        margin-top: 16px;
-        font-size: 12.5px;
-        color: var(--text-soft);
-      }
-      .ring-legend span {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-      }
-      .dot.profit {
-        background: var(--profit);
-      }
-      .dot.loss {
-        background: var(--loss);
-      }
-      .dot.track {
-        background: var(--line);
+        margin-top: 4px;
       }
 
-      /* Stat cards: avg profit/loss, biggest win/loss */
+      .metric-card {
+        padding: 18px 16px;
+      }
+      .metric-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .metric-head .m-label {
+        font-size: 11px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--text-soft);
+        font-weight: 700;
+      }
+      .metric-num {
+        font-size: 24px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+      .metric-pct {
+        font-size: 12px;
+        font-weight: 600;
+        margin: 4px 0 10px;
+      }
+      .metric-pct.profit {
+        color: var(--profit);
+      }
+      .metric-pct.loss {
+        color: var(--loss);
+      }
+      .metric-pct.blue {
+        color: var(--accent);
+      }
+      .metric-spark svg {
+        width: 100%;
+        height: 26px;
+        display: block;
+      }
+      .spark-line {
+        stroke: var(--text-soft);
+      }
+      #profitSpark .spark-line {
+        stroke: var(--profit);
+      }
+      #lossSpark .spark-line {
+        stroke: var(--loss);
+      }
+      #openSpark .spark-line {
+        stroke: var(--accent);
+      }
+
+      /* Avg / biggest row */
       .stat-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        max-width: 640px;
-        margin: 0 auto 34px;
+        gap: 14px;
+        margin-bottom: 20px;
       }
       .stat-card {
-        background: var(--panel-solid);
-        border: 1px solid var(--line);
-        border-radius: 10px;
         padding: 14px 10px;
         text-align: center;
       }
@@ -238,19 +420,67 @@
         color: var(--text-soft);
       }
 
+      /* Lower grid: calendar (left) + sidebar (right) */
+      .lower-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .calendar-card {
+        padding: 22px;
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+      .card-head-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .card-head-link {
+        font-size: 12.5px;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .weekday-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .wd {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--text-soft);
+      }
+      .wd.sun {
+        color: var(--loss);
+      }
+      .wd.sat {
+        color: var(--accent);
+      }
+
       /* Grid of days */
       .grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
-        max-width: 360px;
-        margin: 0 auto;
+        gap: 6px;
       }
       .day {
         aspect-ratio: 1/1;
-        background: var(--panel-solid);
+        background: rgba(15, 23, 42, 0.55);
         border: 1px solid var(--line);
-        border-radius: 4px;
+        border-radius: 6px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -262,18 +492,20 @@
           border-color 0.12s;
         position: relative;
         padding: 1px;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
       }
       .day:hover {
         transform: translateY(-1px);
         border-color: var(--accent);
       }
       .day .num {
-        font-size: 11.5px;
+        font-size: 12.5px;
         font-weight: 600;
         color: var(--text-soft);
       }
       .day .amt {
-        font-size: 7.5px;
+        font-size: 8px;
         font-weight: 600;
         margin-top: 1px;
       }
@@ -297,9 +529,10 @@
       .day.loss .amt {
         color: var(--loss);
       }
-      .day.empty {
-        visibility: hidden;
+      .day.outside {
+        opacity: 0.32;
         cursor: default;
+        pointer-events: none;
       }
       .day.today {
         outline: 2px solid var(--accent);
@@ -310,7 +543,105 @@
         text-align: center;
         color: var(--text-soft);
         font-size: 13px;
-        margin-top: 22px;
+        margin-top: 16px;
+      }
+
+      /* Sidebar */
+      .side-col {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .side-card {
+        padding: 22px;
+      }
+      .side-tag {
+        font-size: 11px;
+        color: var(--text-soft);
+      }
+      .side-empty {
+        font-size: 13px;
+        color: var(--text-soft);
+        font-style: italic;
+        padding: 10px 0;
+      }
+      .trade-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .trade-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .trade-left {
+        min-width: 0;
+      }
+      .trade-pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+      .trade-pill.profit {
+        color: var(--profit);
+        background: var(--profit-bg);
+      }
+      .trade-pill.loss {
+        color: var(--loss);
+        background: var(--loss-bg);
+      }
+      .trade-date {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .trade-note {
+        font-size: 11.5px;
+        color: var(--text-soft);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 220px;
+      }
+      .trade-amt {
+        font-size: 15px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        flex-shrink: 0;
+      }
+      .trade-amt.profit {
+        color: var(--profit);
+      }
+      .trade-amt.loss {
+        color: var(--loss);
+      }
+
+      .chart-svg {
+        width: 100%;
+        height: 150px;
+        display: block;
+      }
+      .chart-axis {
+        fill: var(--text-soft);
+        font-size: 9px;
+      }
+      .chart-empty {
+        text-align: center;
+      }
+
+      .footer-tag {
+        text-align: center;
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+        margin-top: 50px;
       }
 
       /* Modal */
@@ -327,11 +658,13 @@
         display: flex;
       }
       .modal {
-        background: var(--panel-solid);
+        background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 10px;
         padding: 28px;
         width: 300px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
       }
       .modal h3 {
@@ -474,11 +807,13 @@
         display: none;
       }
       .login-box {
-        background: var(--panel-solid);
+        background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 12px;
         padding: 36px 30px;
         width: 320px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
       }
       .login-box h2 {
@@ -535,27 +870,44 @@
         font-size: 13px;
       }
 
+      @media (max-width: 900px) {
+        .hero-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .total-card {
+          grid-column: 1 / 3;
+        }
+        .lower-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       @media (max-width: 600px) {
         .stat-row {
           grid-template-columns: repeat(2, 1fr);
-          max-width: 280px;
+        }
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .total-card {
+          grid-column: auto;
         }
         .navbar {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          gap: 10px;
           padding: 16px 20px;
         }
-        .grid {
-          grid-template-columns: repeat(7, 1fr);
-          max-width: 280px;
+        .brand,
+        .nav-links,
+        .nav-link.logout {
+          justify-self: center;
         }
         .day .num {
           font-size: 10px;
         }
         .day .amt {
           font-size: 6.5px;
-        }
-        .ring-box {
-          width: 170px;
-          height: 170px;
         }
       }
     </style>
@@ -587,20 +939,88 @@
     <div id="appRoot" class="hidden">
       <!-- Navigation Bar -->
       <nav class="navbar">
-        <a href="Home.html" class="nav-link active">Home</a>
-        <a href="contact.html" class="nav-link">Contact Me</a>
+        <div class="brand">
+          <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true">
+            <polyline
+              points="4,30 14,18 22,26 36,6"
+              fill="none"
+              stroke="url(#brandGrad)"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></polyline>
+            <polyline
+              points="26,6 36,6 36,16"
+              fill="none"
+              stroke="url(#brandGrad)"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></polyline>
+            <defs>
+              <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40">
+                <stop offset="0" stop-color="#38bdf8"></stop>
+                <stop offset="1" stop-color="#a855f7"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="brand-text"
+            >NIFTY<span class="brand-accent">EDGE</span></span
+          >
+        </div>
+        <div class="nav-links">
+          <a href="home.html" class="nav-link active">Home</a>
+          <a href="contact.html" class="nav-link">Contact Me</a>
+        </div>
         <button class="nav-link logout" id="logoutBtn">Log out</button>
       </nav>
 
       <main>
-        <div class="month-bar">
-          <button id="prevMonth" aria-label="Previous month">‹</button>
-          <div class="month-title" id="monthTitle">August 2026</div>
-          <button id="nextMonth" aria-label="Next month">›</button>
+        <!-- Month switcher + days logged widget -->
+        <div class="top-row">
+          <div class="month-bar">
+            <button id="prevMonth" aria-label="Previous month">‹</button>
+            <div>
+              <div class="month-title" id="monthTitle">August 2026</div>
+              <div class="month-sub">Track. Analyze. Improve.</div>
+            </div>
+            <button id="nextMonth" aria-label="Next month">›</button>
+          </div>
+
+          <div class="logged-card glass">
+            <div class="icon-badge blue">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div class="logged-text">
+              <div class="l-title" id="daysLogged">0 / 31 DAYS LOGGED</div>
+              <div class="l-sub">Keep going! Consistency is the key.</div>
+            </div>
+            <div class="mini-ring" id="loggedRing">
+              <span id="loggedPercent">0%</span>
+            </div>
+          </div>
         </div>
 
-        <div class="ring-wrap">
-          <div>
+        <!-- Total P&L + metric cards -->
+        <div class="hero-grid">
+          <div class="total-card glass">
+            <div class="total-info">
+              <div class="total-label">Total P&amp;L</div>
+              <div class="total-amt" id="netTotalMain">₹0</div>
+              <div class="total-sub">This Month</div>
+            </div>
             <div class="ring-box">
               <svg viewBox="0 0 200 200">
                 <circle class="ring-track" cx="100" cy="100" r="86"></circle>
@@ -621,46 +1041,179 @@
               </svg>
               <div class="ring-center">
                 <div class="ring-net" id="netTotal">₹0</div>
-                <div class="ring-sub" id="daysLogged">0 / 31 days logged</div>
+                <div class="ring-sub">Net Profit</div>
               </div>
             </div>
-            <div class="ring-legend">
-              <span
-                ><i class="dot profit"></i
-                ><span id="profitDays">0</span> profit</span
-              >
-              <span
-                ><i class="dot loss"></i><span id="lossDays">0</span> loss</span
-              >
-              <span
-                ><i class="dot track"></i
-                ><span id="openDays">31</span> open</span
-              >
+          </div>
+
+          <div class="metric-card glass">
+            <div class="metric-head">
+              <div class="icon-badge profit">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polyline points="3,17 9,11 13,15 21,5"></polyline>
+                  <polyline points="14,5 21,5 21,12"></polyline>
+                </svg>
+              </div>
+              <div class="m-label">Profit Trades</div>
             </div>
+            <div class="metric-num" id="profitTradesCount">0</div>
+            <div class="metric-pct profit" id="profitTradesPct">0.00%</div>
+            <div class="metric-spark" id="profitSpark"></div>
+          </div>
+
+          <div class="metric-card glass">
+            <div class="metric-head">
+              <div class="icon-badge loss">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polyline points="3,7 9,13 13,9 21,19"></polyline>
+                  <polyline points="14,19 21,19 21,12"></polyline>
+                </svg>
+              </div>
+              <div class="m-label">Loss Trades</div>
+            </div>
+            <div class="metric-num" id="lossTradesCount">0</div>
+            <div class="metric-pct loss" id="lossTradesPct">0.00%</div>
+            <div class="metric-spark" id="lossSpark"></div>
+          </div>
+
+          <div class="metric-card glass">
+            <div class="metric-head">
+              <div class="icon-badge blue">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                  <line x1="4" y1="10" x2="20" y2="10"></line>
+                </svg>
+              </div>
+              <div class="m-label">Open Trades</div>
+            </div>
+            <div class="metric-num" id="openTradesCount">31</div>
+            <div class="metric-pct blue" id="openTradesPct">100.00%</div>
+            <div class="metric-spark" id="openSpark"></div>
           </div>
         </div>
 
+        <!-- Avg / biggest row -->
         <div class="stat-row">
-          <div class="stat-card">
+          <div class="stat-card glass">
             <div class="stat-label">Avg Profit</div>
             <div class="stat-val profit" id="avgProfit">—</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card glass">
             <div class="stat-label">Avg Loss</div>
             <div class="stat-val loss" id="avgLoss">—</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card glass">
             <div class="stat-label">Biggest Win</div>
             <div class="stat-val profit" id="biggestWin">—</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card glass">
             <div class="stat-label">Biggest Loss</div>
             <div class="stat-val loss" id="biggestLoss">—</div>
           </div>
         </div>
 
-        <div class="grid" id="dayGrid"></div>
-        <p class="hint" id="syncHint"></p>
+        <!-- Calendar (left) + sidebar (right) -->
+        <div class="lower-grid">
+          <div class="calendar-card glass">
+            <div class="card-head">
+              <div class="card-head-left">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span id="monthTitleCal">August 2026</span>
+              </div>
+            </div>
+            <div class="weekday-row">
+              <span class="wd sun">SUN</span>
+              <span class="wd">MON</span>
+              <span class="wd">TUE</span>
+              <span class="wd">WED</span>
+              <span class="wd">THU</span>
+              <span class="wd">FRI</span>
+              <span class="wd sat">SAT</span>
+            </div>
+            <div class="grid" id="dayGrid"></div>
+            <p class="hint" id="syncHint"></p>
+          </div>
+
+          <div class="side-col">
+            <div class="side-card glass">
+              <div class="card-head">
+                <div class="card-head-left">
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <polyline points="12,7 12,12 15,15"></polyline>
+                  </svg>
+                  <span>Recent Trades</span>
+                </div>
+                <span class="side-tag">This Month</span>
+              </div>
+              <div id="recentTradesList">
+                <p class="side-empty">No trades logged yet this month.</p>
+              </div>
+            </div>
+
+            <div class="side-card glass">
+              <div class="card-head">
+                <div class="card-head-left">
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="3,17 9,11 13,15 21,5"></polyline>
+                  </svg>
+                  <span>Monthly P&amp;L Overview</span>
+                </div>
+                <span class="side-tag">This Month</span>
+              </div>
+              <div id="chartArea"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="footer-tag">Trade Smart. Trade Safe. Trade with Edge.</p>
       </main>
 
       <!-- MODAL -->
@@ -837,6 +1390,7 @@
 
       const grid = document.getElementById("dayGrid");
       const monthTitle = document.getElementById("monthTitle");
+      const monthTitleCal = document.getElementById("monthTitleCal");
       const overlay = document.getElementById("overlay");
       const modalDate = document.getElementById("modalDate");
       const amountInput = document.getElementById("amountInput");
@@ -856,6 +1410,25 @@
         return n < 0 ? "−" + s : "+" + s;
       }
 
+      function fmtShort(n) {
+        const abs = Math.abs(Math.round(n));
+        return (n < 0 ? "−" : "") + "₹" + abs.toLocaleString("en-IN");
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
       function normalize(raw) {
         const out = {};
         for (const [day, v] of Object.entries(raw || {})) {
@@ -868,7 +1441,9 @@
 
       async function loadMonth() {
         grid.innerHTML = "";
-        monthTitle.textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+        const label = `${MONTHS[viewMonth]} ${viewYear}`;
+        monthTitle.textContent = label;
+        monthTitleCal.textContent = label;
         syncHint.textContent = "Loading...";
         try {
           const raw = await window.__firestore.loadMonth(viewYear, viewMonth);
@@ -881,6 +1456,8 @@
         }
         renderGrid();
         renderSummary();
+        renderRecentTrades();
+        renderChart();
       }
 
       function daysInMonth(y, m) {
@@ -890,15 +1467,23 @@
       function renderGrid() {
         grid.innerHTML = "";
         const total = daysInMonth(viewYear, viewMonth);
+        const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+        const prevTotal = daysInMonth(viewYear, viewMonth - 1);
+        const cellsSoFar = firstDow + total;
+        const trailing = (7 - (cellsSoFar % 7)) % 7;
         const isCurrentRealMonth =
           viewYear === today.getFullYear() && viewMonth === today.getMonth();
-        for (let d = 1; d <= 31; d++) {
+
+        for (let i = 0; i < firstDow; i++) {
+          const dayNum = prevTotal - firstDow + 1 + i;
           const cell = document.createElement("div");
-          if (d > total) {
-            cell.className = "day empty";
-            grid.appendChild(cell);
-            continue;
-          }
+          cell.className = "day outside";
+          cell.innerHTML = `<div class="num">${dayNum}</div>`;
+          grid.appendChild(cell);
+        }
+
+        for (let d = 1; d <= total; d++) {
+          const cell = document.createElement("div");
           cell.className = "day";
           if (isCurrentRealMonth && d === today.getDate())
             cell.classList.add("today");
@@ -912,10 +1497,21 @@
           cell.addEventListener("click", () => openModal(d));
           grid.appendChild(cell);
         }
+
+        for (let i = 1; i <= trailing; i++) {
+          const cell = document.createElement("div");
+          cell.className = "day outside";
+          cell.innerHTML = `<div class="num">${i}</div>`;
+          grid.appendChild(cell);
+        }
       }
 
       const RING_R = 86;
       const RING_C = 2 * Math.PI * RING_R;
+
+      function pct(count, total) {
+        return total ? ((count / total) * 100).toFixed(2) : "0.00";
+      }
 
       function renderSummary() {
         const totalDays = daysInMonth(viewYear, viewMonth);
@@ -924,17 +1520,36 @@
         const profitDays = vals.filter((v) => v > 0).length;
         const lossDays = vals.filter((v) => v < 0).length;
         const openDays = totalDays - profitDays - lossDays;
+        const loggedDays = profitDays + lossDays;
 
-        document.getElementById("profitDays").textContent = profitDays;
-        document.getElementById("lossDays").textContent = lossDays;
-        document.getElementById("openDays").textContent = openDays;
         document.getElementById("daysLogged").textContent =
-          `${profitDays + lossDays} / ${totalDays} days logged`;
+          `${loggedDays} / ${totalDays} DAYS LOGGED`;
+        const loggedPct = totalDays
+          ? Math.round((loggedDays / totalDays) * 100)
+          : 0;
+        document.getElementById("loggedPercent").textContent = loggedPct + "%";
+        document
+          .getElementById("loggedRing")
+          .style.setProperty("--p", loggedPct);
 
-        const netEl = document.getElementById("netTotal");
-        netEl.textContent = fmt(net).replace("+", "+ ").replace("−", "− ");
-        netEl.className =
-          "ring-net " + (net > 0 ? "profit" : net < 0 ? "loss" : "zero");
+        document.getElementById("profitTradesCount").textContent = profitDays;
+        document.getElementById("lossTradesCount").textContent = lossDays;
+        document.getElementById("openTradesCount").textContent = openDays;
+        document.getElementById("profitTradesPct").textContent =
+          pct(profitDays, totalDays) + "%";
+        document.getElementById("lossTradesPct").textContent =
+          pct(lossDays, totalDays) + "%";
+        document.getElementById("openTradesPct").textContent =
+          pct(openDays, totalDays) + "%";
+
+        const netStr = fmt(net).replace("+", "+ ").replace("−", "− ");
+        const netClass = net > 0 ? "profit" : net < 0 ? "loss" : "zero";
+        const netTotalEl = document.getElementById("netTotal");
+        netTotalEl.textContent = netStr;
+        netTotalEl.className = "ring-net " + netClass;
+        const netTotalMainEl = document.getElementById("netTotalMain");
+        netTotalMainEl.textContent = netStr;
+        netTotalMainEl.className = "total-amt " + netClass;
 
         const profitLen = RING_C * (profitDays / totalDays);
         const lossLen = RING_C * (lossDays / totalDays);
@@ -963,6 +1578,39 @@
         setStat("avgLoss", avgLoss, "loss");
         setStat("biggestWin", biggestWin, "profit");
         setStat("biggestLoss", biggestLoss, "loss");
+
+        renderSparklines();
+      }
+
+      function cumulativePoints() {
+        const total = daysInMonth(viewYear, viewMonth);
+        let cum = 0;
+        const pts = [];
+        for (let d = 1; d <= total; d++) {
+          if (entriesCache[d]) cum += entriesCache[d].amount;
+          pts.push(cum);
+        }
+        return pts;
+      }
+
+      function renderSparklines() {
+        const vals = cumulativePoints();
+        const max = Math.max(...vals, 0);
+        const min = Math.min(...vals, 0);
+        const range = max - min || 1;
+        const w = 100,
+          h = 26;
+        const points = vals
+          .map((v, i) => {
+            const x = (i / (vals.length - 1 || 1)) * w;
+            const y = h - ((v - min) / range) * h;
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+          })
+          .join(" ");
+        const svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${points}" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spark-line"/></svg>`;
+        ["profitSpark", "lossSpark", "openSpark"].forEach((id) => {
+          document.getElementById(id).innerHTML = svg;
+        });
       }
 
       function setStat(id, value, kind) {
@@ -974,6 +1622,97 @@
           el.textContent = fmt(value);
           el.className = "stat-val " + kind;
         }
+      }
+
+      function renderRecentTrades() {
+        const list = document.getElementById("recentTradesList");
+        const entries = Object.entries(entriesCache)
+          .map(([day, e]) => ({ day: Number(day), ...e }))
+          .sort((a, b) => b.day - a.day)
+          .slice(0, 4);
+
+        if (!entries.length) {
+          list.innerHTML =
+            '<p class="side-empty">No trades logged yet this month.</p>';
+          return;
+        }
+
+        list.innerHTML = entries
+          .map((e) => {
+            const kind = e.amount >= 0 ? "profit" : "loss";
+            const label = kind === "profit" ? "PROFIT" : "LOSS";
+            const dateStr = `${MONTHS[viewMonth]} ${e.day}, ${viewYear}`;
+            const noteStr = e.note && e.note.trim() ? e.note : "No description";
+            return `<div class="trade-row">
+              <div class="trade-left">
+                <span class="trade-pill ${kind}">${label}</span>
+                <div class="trade-date">${dateStr}</div>
+                <div class="trade-note">${escapeHtml(noteStr)}</div>
+              </div>
+              <div class="trade-amt ${kind}">${fmt(e.amount)}</div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderChart() {
+        const container = document.getElementById("chartArea");
+        const total = daysInMonth(viewYear, viewMonth);
+        const points = cumulativePoints();
+        const hasData = Object.keys(entriesCache).length > 0;
+        const max = Math.max(...points, 0);
+        const min = Math.min(...points, 0);
+        const range = max - min || 1;
+        const w = 500,
+          h = 150,
+          padL = 42,
+          padR = 12,
+          padT = 14,
+          padB = 26;
+        const plotW = w - padL - padR;
+        const plotH = h - padT - padB;
+        const stepX = plotW / (total - 1 || 1);
+        const coords = points.map((v, i) => {
+          const x = padL + i * stepX;
+          const y = padT + plotH - ((v - min) / range) * plotH;
+          return [x, y];
+        });
+        const zeroY = padT + plotH - ((0 - min) / range) * plotH;
+        const last = coords[coords.length - 1];
+        const linePts = coords.map((c) => c.join(",")).join(" ");
+
+        const labelDays = [
+          ...new Set([
+            1,
+            Math.min(8, total),
+            Math.min(15, total),
+            Math.min(22, total),
+            total,
+          ]),
+        ];
+
+        let svg = `<svg viewBox="0 0 ${w} ${h}" class="chart-svg">`;
+        svg += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="var(--line)" stroke-width="1"/>`;
+        svg += `<line x1="${padL}" y1="${padT + plotH}" x2="${w - padR}" y2="${padT + plotH}" stroke="var(--line)" stroke-width="1"/>`;
+        svg += `<text x="2" y="${padT + 4}" class="chart-axis">${fmtShort(max)}</text>`;
+        svg += `<text x="2" y="${zeroY + 3}" class="chart-axis">₹0</text>`;
+        if (min < 0)
+          svg += `<text x="2" y="${padT + plotH}" class="chart-axis">${fmtShort(min)}</text>`;
+        labelDays.forEach((d) => {
+          const x = padL + (d - 1) * stepX;
+          svg += `<text x="${x}" y="${h - 6}" class="chart-axis" text-anchor="middle">${d} ${MONTHS[viewMonth].slice(0, 3)}</text>`;
+        });
+        svg += `<defs><linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>`;
+        if (hasData) {
+          svg += `<polyline points="${linePts}" fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+          svg += `<circle cx="${last[0]}" cy="${last[1]}" r="5" fill="#a855f7" stroke="#0b0f19" stroke-width="2"/>`;
+        }
+        svg += `</svg>`;
+        container.innerHTML =
+          svg +
+          (hasData
+            ? ""
+            : '<p class="side-empty chart-empty">Log a trade to see your monthly curve.</p>');
       }
 
       function openModal(day) {
@@ -1051,6 +1790,8 @@
         await persist();
         renderGrid();
         renderSummary();
+        renderRecentTrades();
+        renderChart();
         closeModal();
       });
 
@@ -1061,6 +1802,8 @@
           await persist();
           renderGrid();
           renderSummary();
+          renderRecentTrades();
+          renderChart();
           closeModal();
         });
 
